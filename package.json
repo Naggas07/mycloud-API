@@ -1,0 +1,23 @@
+{
+  "name": "mycloud",
+  "version": "1.0.0",
+  "description": "backend myCloud",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Naggas07/mycloud-API.git"
+  },
+  "author": "Naggas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Naggas07/mycloud-API/issues"
+  },
+  "homepage": "https://github.com/Naggas07/mycloud-API#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.9.28"
+  }
+}
