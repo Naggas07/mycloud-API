@@ -3,7 +3,7 @@ const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://localhost:27017/myCloud";
 
 mongoose
-  .connect(MONGODB_URI, { useNewUrlParser: true })
+  .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() =>
     console.info(`Successfully connected to the database ${MONGODB_URI}`)
   )
