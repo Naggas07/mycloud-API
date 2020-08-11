@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const bcrypt = require("bcrypt");
 const SALTFACTOR = process.env.SALT || 11;
 
-const userModel = new Schema(
+const userSchema = new Schema(
   {
     name: {
       type: String,
