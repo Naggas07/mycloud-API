@@ -43,3 +43,8 @@ module.exports.login = (req, res, next) => {
     })
     .catch(next);
 };
+
+module.exports.logout = (req, res) => {
+  req.session.destroy();
+  res.status(200).json({ message: "session destroyed" });
+};
