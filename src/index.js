@@ -29,9 +29,9 @@ app.use((req, _, next) => {
 });
 
 // catch 404 and forward to error handler
-// app.use(function (req, res, next) {
-//   next(createError(404));
-// });
+app.use(function (req, res, next) {
+  next(createError(404));
+});
 
 /**
  * Listen on provided port

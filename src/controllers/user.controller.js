@@ -95,3 +95,13 @@ module.exports.updateUser = (req, res, next) => {
       .catch(next);
   }
 };
+
+module.exports.getUser = (req, res, next) => {
+  const { id } = req.params;
+
+  User.findById(id)
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch(next);
+};
