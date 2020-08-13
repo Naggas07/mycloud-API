@@ -48,3 +48,47 @@ module.exports.logout = (req, res) => {
   req.session.destroy();
   res.status(200).json({ message: "session destroyed" });
 };
+
+module.exports.updateUser = (req, res, next) => {
+  const { id } = req.params;
+
+  const userUpdate = req.body;
+  if (req.file) {
+    userUpdate.avatar = req.file.url;
+  }
+
+  if (req.body.password) {
+    bcrypt.genSalt(SALTFACTOR).then((salt) => {
+      return bcrypt.hash(req.body.password, salt).then((hash) => {
+        userUpdate.password = hash;
+        User.findByIdAndUpdate(id, userUpdate, {
+          new: true,
+          useFindAndModify: false,
+        })
+          .then((user) => {
+            if (!user) {
+              res.status(404).json({ message: "User not found" });
+            } else {
+              user.avatar = req.file ? req.file.url : user.avatar;
+              res.status(200).json(user);
+            }
+          })
+          .catch(next);
+      });
+    });
+  } else {
+    User.findByIdAndUpdate(id, userUpdate, {
+      new: true,
+      useFindAndModify: false,
+    })
+      .then((user) => {
+        if (!user) {
+          res.status(404).json({ message: "User not found" });
+        } else {
+          user.avatar = req.file ? req.file.url : user.avatar;
+          res.status(200).json(user);
+        }
+      })
+      .catch(next);
+  }
+};
