@@ -1,5 +1,8 @@
 const User = require("../models/user.model");
 
+const bcrypt = require("bcrypt");
+const SALTFACTOR = process.env.SALT || 11;
+
 module.exports.create = (req, res, next) => {
   const { name, nickName, email, password, userType, avatar } = req.body;
 
