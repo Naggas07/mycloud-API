@@ -5,12 +5,8 @@ const directoryPath = path.join(
   "/Users/naggas/Desktop/Proyectos/myCloud/src/public"
 );
 
-fs.readdir(directoryPath, { withFileTypes: true }, (err, files) => {
-  if (err) {
-    console.log(err);
-    console.log("hola");
-  } else {
-    let print = files.filter((fileEnt) => fileEnt.isFile());
-    console.log(print);
-  }
-});
+let dirs = fs
+  .readdirSync(directoryPath)
+  .filter((file) => fs.statSync(`${directoryPath}/${file}`).isFile());
+
+console.log(dirs);
