@@ -33,4 +33,4 @@ deleteFile = (dir, nameFile) => {
   fs.unlinkSync(`${dir}/${nameFile}`);
 };
 
-deleteFile(directoryPath, "public.txt");
+// deleteFile(directoryPath, "public.txt");
