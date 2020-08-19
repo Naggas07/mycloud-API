@@ -1,15 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 
-const directoryPath = path.join(
-  "/Users/naggas/Desktop/Proyectos/myCloud/src/public"
+const cloudPath = path.join(
+  "/Users/naggas/Desktop/Proyectos/myCloud/src/uploads/users"
 );
 
 let dirs = fs
-  .readdirSync(directoryPath)
-  .filter((file) => fs.statSync(`${directoryPath}/${file}`).isDirectory());
-
-console.log(dirs);
+  .readdirSync(cloudPath)
+  .filter((file) => fs.statSync(`${cloudPath}/${file}`).isDirectory());
 
 let createDir = (dir, nameFolder) => {
   if (!fs.existsSync(`${dir}/${nameFolder}`)) {
@@ -34,3 +32,9 @@ deleteFile = (dir, nameFile) => {
 };
 
 // deleteFile(directoryPath, "public.txt");
+
+module.exports = {
+  cloudPath,
+  createDir,
+  deleteDir,
+};

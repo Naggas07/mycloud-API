@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+const archives = require("../config/archivesFunctions");
 
 const bcrypt = require("bcrypt");
 const SALTFACTOR = process.env.SALT || 11;
@@ -12,11 +13,13 @@ module.exports.create = (req, res, next) => {
     email,
     password,
     userType,
+    folders: ["shared", name],
     avatar: null,
   };
 
   User.create(user)
     .then((user) => {
+      archives.createDir(archives.cloudPath, user.name);
       res.status(201).json(user);
     })
     .catch(next);

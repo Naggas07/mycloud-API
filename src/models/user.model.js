@@ -28,6 +28,11 @@ const userSchema = new Schema(
       enum: ["Admin", "User"],
       default: "User",
     },
+    folders: {
+      type: [String],
+      default: ["shared"],
+    },
+
     avatar: {
       type: String,
       default: null,
