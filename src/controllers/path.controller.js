@@ -37,8 +37,10 @@ module.exports.getMyFolders = (req, res, next) => {
   } else {
     res.status(404).json({ message: "Forbidden" });
   }
+};
 
-  console.log(path, mainFolder);
+module.exports.getAdminFolder = (req, res, next) => {
+  let path = req.params.path.split("-");
 
-  res.json(req.session.user);
+  res.status(200).json(archives.formatPath(path));
 };

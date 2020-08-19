@@ -7,7 +7,7 @@ const filesRoutes = require("./files.routes");
 const pathRoutes = require("./path.routes");
 
 router.get("/", (req, res, next) => {
-  res.json({ message: "welcome to my app" });
+  res.json({ message: "Home ok" });
 });
 
 //user routes
