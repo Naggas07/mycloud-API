@@ -34,7 +34,9 @@ deleteFile = (dir, nameFile) => {
 // deleteFile(directoryPath, "public.txt");
 
 const moveFile = (file, storagePath) => {
-  const filePath = `${storagePath}/${file.name}`;
+  const filePath = file.name.includes("-")
+    ? `${storagePath}/${file.name.split("-").join("_")}`
+    : `${storagePath}/${file.name}`;
   console.log(filePath);
 
   return new Promise((resolve, reject) => {
