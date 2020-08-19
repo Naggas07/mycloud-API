@@ -33,8 +33,29 @@ deleteFile = (dir, nameFile) => {
 
 // deleteFile(directoryPath, "public.txt");
 
+const moveFile = (file, storagePath) => {
+  const filePath = `${storagePath}/${file.name}`;
+  console.log(filePath);
+
+  return new Promise((resolve, reject) => {
+    fs.promises
+      .access(filePath)
+      .then(() => reject(new Error(`File ${file.name} already exists`)))
+      .catch(() =>
+        file.mv(filePath, (err) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        })
+      );
+  });
+};
+
 module.exports = {
   cloudPath,
   createDir,
   deleteDir,
+  moveFile,
 };

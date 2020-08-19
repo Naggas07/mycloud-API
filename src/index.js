@@ -5,6 +5,7 @@ const path = require("path");
 const createError = require("http-errors");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 
 require("./config/database");
 
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(session);
+app.use(fileUpload());
 app.use(routes);
 
 app.use((req, _, next) => {
