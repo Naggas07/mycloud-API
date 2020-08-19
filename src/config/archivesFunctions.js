@@ -19,16 +19,18 @@ let createDir = (dir, nameFolder) => {
 };
 
 let deleteDir = (dir, nameFolder) => {
-  if (fs.existsSync(`${dir}/${nameFolder}`)) {
-    fs.rmdirSync(`${dir}/${nameFolder}`);
-    return `${dir}/${nameFolder} is deleted`;
+  let path = !nameFolder ? dir : `${dir}/${nameFolder}`;
+  if (fs.existsSync(path)) {
+    fs.rmdirSync(path);
+    return `${path} is deleted`;
   } else {
-    return `${dir}/${nameFolder} is not exist`;
+    return `${path} is not exist`;
   }
 };
 
 deleteFile = (dir, nameFile) => {
-  fs.unlinkSync(`${dir}/${nameFile}`);
+  let path = !nameFile ? dir : `${dir}/${nameFile}`;
+  fs.unlinkSync(path);
 };
 
 // deleteFile(directoryPath, "public.txt");

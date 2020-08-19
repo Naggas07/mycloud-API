@@ -4,6 +4,7 @@ const router = express.Router();
 // load principal routes
 const userRoutes = require("./user.routes");
 const filesRoutes = require("./files.routes");
+const pathRoutes = require("./path.routes");
 
 router.get("/", (req, res, next) => {
   res.json({ message: "welcome to my app" });
@@ -13,5 +14,6 @@ router.get("/", (req, res, next) => {
 
 router.use("/user", userRoutes);
 router.use("/files", filesRoutes);
+router.use("/paths", pathRoutes);
 
 module.exports = router;
