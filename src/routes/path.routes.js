@@ -6,5 +6,6 @@ const rolMiddleware = require("../middlewares/rol.middlewares");
 
 router.post("/new/:path", pathController.newFolder);
 router.post("/delete/:path", pathController.deleteFolder);
+router.get("/myPaths/:path", pathController.getMyFolders);
 
 module.exports = router;

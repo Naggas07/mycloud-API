@@ -9,6 +9,19 @@ let dirs = fs
   .readdirSync(cloudPath)
   .filter((file) => fs.statSync(`${cloudPath}/${file}`).isDirectory());
 
+let formatPath = (path) => {
+  let dir = fs.readdirSync(`${cloudPath}/${path}`);
+
+  return {
+    folders: dir.filter((file) =>
+      fs.statSync(`${cloudPath}/${path}/${file}`).isDirectory()
+    ),
+    files: dir.filter((file) =>
+      fs.statSync(`${cloudPath}/${path}/${file}`).isFile()
+    ),
+  };
+};
+
 let createDir = (dir, nameFolder) => {
   if (!fs.existsSync(`${dir}/${nameFolder}`)) {
     fs.mkdirSync(`${dir}/${nameFolder}`);
@@ -62,4 +75,5 @@ module.exports = {
   createDir,
   deleteDir,
   moveFile,
+  formatPath,
 };

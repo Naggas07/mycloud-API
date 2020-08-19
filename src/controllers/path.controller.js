@@ -3,6 +3,7 @@ const path = require("path");
 
 //routes
 const archives = require("../config/archivesFunctions");
+const { listenerCount } = require("../models/user.model");
 
 module.exports.newFolder = (req, res, next) => {
   const path = req.params.path.split("-").join("/");
@@ -24,4 +25,20 @@ module.exports.deleteFolder = (req, res, next) => {
   let message = archives.deleteDir(`${archives.cloudPath}/${path}`);
 
   res.json({ message });
+};
+
+module.exports.getMyFolders = (req, res, next) => {
+  let path = req.params.path.split("-");
+  const mainFolder = path[0];
+  path = path.join("/");
+
+  if (req.session.user.folders.includes(mainFolder)) {
+    res.status(200).json(archives.formatPath(path));
+  } else {
+    res.status(404).json({ message: "Forbidden" });
+  }
+
+  console.log(path, mainFolder);
+
+  res.json(req.session.user);
 };
