@@ -15,6 +15,10 @@ router.post(
   filesController.rename
 );
 
-router.get("/download/:path", filesController.downloadFile);
+router.get(
+  "/download/:path",
+  authMiddleware.isAuthenticated,
+  filesController.downloadFile
+);
 
 module.exports = router;

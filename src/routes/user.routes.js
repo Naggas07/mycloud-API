@@ -6,8 +6,8 @@ const rolMiddleware = require("../middlewares/rol.middlewares");
 
 router.post(
   "/register",
-  //   authMiddleware.isAuthenticated,
-  //   rolMiddleware.isAdmin,
+  authMiddleware.isAuthenticated,
+  rolMiddleware.isAdmin,
   userController.create
 );
 router.post("/login", authMiddleware.isNotAuthenticated, userController.login);
