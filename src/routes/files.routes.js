@@ -15,4 +15,6 @@ router.post(
   filesController.rename
 );
 
+router.get("/download/:path", filesController.downloadFile);
+
 module.exports = router;
