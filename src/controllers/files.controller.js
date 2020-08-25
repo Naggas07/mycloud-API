@@ -45,3 +45,15 @@ module.exports.downloadFile = (req, res, next) => {
     res.status(404).json({ message: "file don´t exist" });
   }
 };
+
+module.exports.getFile = (req, res, next) => {
+  const file = `${archives.cloudPath}/${req.params.path.split("-").join("/")}`;
+  console.log(file);
+  if (fs.existsSync(file)) {
+    res.sendFile(path.resolve(file));
+  } else {
+    res.status(404).json({ message: "file don´t exist" });
+  }
+};
+
+module.exports.getFiles = (req, res, next) => {};

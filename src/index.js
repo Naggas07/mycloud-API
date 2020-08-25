@@ -6,6 +6,7 @@ const createError = require("http-errors");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
+const cors = require("./config/cors");
 
 require("./config/database");
 
@@ -16,6 +17,7 @@ const routes = require("./routes/main.routes");
 
 const app = express();
 
+app.use(cors);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

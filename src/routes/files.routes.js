@@ -21,4 +21,10 @@ router.get(
   filesController.downloadFile
 );
 
+router.get(
+  "/file/:path",
+  authMiddleware.isAuthenticated,
+  filesController.getFile
+);
+
 module.exports = router;
