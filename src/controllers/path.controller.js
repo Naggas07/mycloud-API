@@ -20,7 +20,6 @@ module.exports.newFolder = (req, res, next) => {
 
 module.exports.deleteFolder = (req, res, next) => {
   const path = req.params.path.split("-").join("/");
-  console.log(`${archives.cloudPath}/${path}`);
 
   let message = archives.deleteDir(`${archives.cloudPath}/${path}`);
 
