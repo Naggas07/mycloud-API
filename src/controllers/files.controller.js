@@ -8,9 +8,6 @@ module.exports.upload = async (req, res, next) => {
   const folder = req.params.path.split("-").join("/");
   const files = req.files.file;
 
-  console.log(files);
-  console.log("es array? ", Array.isArray(files));
-
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send("No files were uploaded.");
   }
