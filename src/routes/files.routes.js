@@ -9,6 +9,13 @@ router.post(
   authMiddleware.isAuthenticated,
   filesController.upload
 );
+
+router.post(
+  "/unitUpload/:path",
+  authMiddleware.isAuthenticated,
+  filesController.unitUpload
+);
+
 router.post(
   "/rename/:path",
   authMiddleware.isAuthenticated,
