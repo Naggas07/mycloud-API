@@ -50,8 +50,12 @@ module.exports.upload = async (req, res, next) => {
 module.exports.rename = (req, res, next) => {
   const path = req.params.path.split("-").join("/");
   const { fileName, newName } = req.body;
+  let extension = fileName.split(".");
 
-  File.findOneAndUpdate({ path: path, name: fileName }, { name: newName })
+  File.findOneAndUpdate(
+    { path: path, name: fileName },
+    { name: `${newName}.${extension[extension.length - 1]}` }
+  )
     .then((ok) => {
       fs.renameSync(
         `${archives.cloudPath}/${path}/${fileName}`,
@@ -73,7 +77,21 @@ module.exports.downloadFile = (req, res, next) => {
   }
 };
 
-module.exports.deleteFile = () => {};
+module.exports.deleteFile = (req, res, next) => {
+  const allPath = req.params.path.split("-");
+  const file = `${archives.cloudPath}/${allPath.join("/")}`;
+  const path = allPath.slice(0, allPath.length - 1).join("/");
+  const fileName = allPath[allPath.length - 1];
+
+  if (fs.existsSync(file)) {
+    fs.unlinkSync(file);
+    File.findOneAndDelete({ path, name: fileName }).then((del) => {
+      res.status(200).json({ message: "File deleted" });
+    });
+  } else {
+    res.status(404).json({ message: "file don´t exist" });
+  }
+};
 
 module.exports.getFile = (req, res, next) => {
   const file = `${archives.cloudPath}/${req.params.path.split("-").join("/")}`;

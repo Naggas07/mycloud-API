@@ -28,4 +28,10 @@ router.get(
   filesController.getFile
 );
 
+router.delete(
+  "/delete/:path",
+  authMiddleware.isAuthenticated,
+  filesController.deleteFile
+);
+
 module.exports = router;
