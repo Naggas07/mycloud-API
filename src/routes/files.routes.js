@@ -38,7 +38,7 @@ router.delete(
 );
 
 router.delete(
-  "/deleteMany",
+  "/deleteMany/:path",
   authMiddleware.isAuthenticated,
   authMiddleware.isPropietary,
   filesController.deleteMultipleFiles
