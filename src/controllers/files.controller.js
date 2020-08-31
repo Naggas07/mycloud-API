@@ -93,6 +93,31 @@ module.exports.deleteFile = (req, res, next) => {
   }
 };
 
+module.exports.deleteMultipleFiles = (req, res, next) => {
+  const path = `${archives.cloudPath}/${req.params.split("-").join("/")}`;
+  const { files } = req.body;
+  let failFiles = [];
+
+  if (!files) {
+    res.status(404).json({ message: "No files to delete" });
+  } else {
+    files.map((file) => {
+      let route = `${path}/${file}`;
+      if (fs.existsSync(route)) {
+        fs.unlinkSync(route);
+        File.findByIdAndDelete({ path, name: file }).then((ok) => ok);
+      } else {
+        failFiles.push(file);
+      }
+    });
+    if (failFiles) {
+      res.status(404).json({ filesFailed: failFiles });
+    } else {
+      res.status(200).json({ message: "Files deleted" });
+    }
+  }
+};
+
 module.exports.getFile = (req, res, next) => {
   const file = `${archives.cloudPath}/${req.params.path.split("-").join("/")}`;
   console.log(file);
