@@ -1,5 +1,5 @@
 const cors = require("cors");
-let originCors = process.env.CORS_ORIGIN;
+let originCors = null; //process.env.CORS_ORIGIN;
 
 const corsMiddleware = cors({
   origin: originCors || "http://localhost:3000",

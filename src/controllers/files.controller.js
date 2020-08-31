@@ -31,13 +31,16 @@ module.exports.upload = async (req, res, next) => {
 
   try {
     if (Array.isArray(files)) {
+      console.log("entra en array");
       for (const file of files) {
         let item = createFile(file, folder);
         File.create(item);
         await archives.moveFile(file, `${archives.cloudPath}/${folder}/`);
       }
     } else {
-      let item = createFile(file, folder);
+      console.log("entra en no array");
+      let item = createFile(files, folder);
+
       File.create(item);
       await archives.moveFile(files, `${archives.cloudPath}/${folder}/`);
     }
