@@ -50,12 +50,17 @@ module.exports.upload = async (req, res, next) => {
 module.exports.rename = (req, res, next) => {
   const path = req.params.path.split("-").join("/");
   const { fileName, newName } = req.body;
-  fs.renameSync(
-    `${archives.cloudPath}/${path}/${fileName}`,
-    `${archives.cloudPath}/${path}/${newName}.${fileName.split(".")[1]}`
-  );
 
-  res.json({ ok: "ok " });
+  File.findOneAndUpdate({ path: path, name: fileName }, { name: newName })
+    .then((ok) => {
+      fs.renameSync(
+        `${archives.cloudPath}/${path}/${fileName}`,
+        `${archives.cloudPath}/${path}/${newName}.${fileName.split(".")[1]}`
+      );
+
+      res.json({ ok: "ok " });
+    })
+    .catch((err) => err);
 };
 
 module.exports.downloadFile = (req, res, next) => {
@@ -67,6 +72,8 @@ module.exports.downloadFile = (req, res, next) => {
     res.status(404).json({ message: "file don´t exist" });
   }
 };
+
+module.exports.deleteFile = () => {};
 
 module.exports.getFile = (req, res, next) => {
   const file = `${archives.cloudPath}/${req.params.path.split("-").join("/")}`;
