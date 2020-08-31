@@ -9,21 +9,18 @@ module.exports.upload = async (req, res, next) => {
   const folder = req.params.path.split("-").join("/");
   const files = req.files.file;
 
-  console.log(files);
-  // usr id pending
-
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send("No files were uploaded.");
   }
 
-  const createFile = (item, path, user) => {
+  const createFile = (item, path, id) => {
     let itemFile = {
       name: item.name,
       path: path,
       size: item.size,
       encoding: item.encoding,
       type: item.mimetype,
-      user,
+      user: id,
     };
 
     return itemFile;
@@ -33,14 +30,13 @@ module.exports.upload = async (req, res, next) => {
     if (Array.isArray(files)) {
       console.log("entra en array");
       for (const file of files) {
-        let item = createFile(file, folder);
+        let item = createFile(file, folder, req.session.user.id);
         File.create(item);
         await archives.moveFile(file, `${archives.cloudPath}/${folder}/`);
       }
     } else {
       console.log("entra en no array");
-      let item = createFile(files, folder);
-
+      let item = createFile(files, folder, req.session.user.id);
       File.create(item);
       await archives.moveFile(files, `${archives.cloudPath}/${folder}/`);
     }
@@ -49,27 +45,6 @@ module.exports.upload = async (req, res, next) => {
   }
 
   res.json({ message: "files updated" });
-};
-
-module.exports.unitUpload = (req, res, next) => {
-  async (req, res, next) => {
-    const folder = req.params.path.split("-").join("/");
-    const files = req.files.file;
-
-    console.log(files);
-
-    if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).send("No files were uploaded.");
-    }
-
-    try {
-      await archives.moveFile(files.file, `${archives.cloudPath}/${folder}/`);
-    } catch (err) {
-      res.json({ message: "file not update" });
-    }
-
-    res.json({ message: "file updated" });
-  };
 };
 
 module.exports.rename = (req, res, next) => {
