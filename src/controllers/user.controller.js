@@ -14,7 +14,7 @@ module.exports.create = (req, res, next) => {
     email,
     password,
     userType,
-    folders: ["shared", name],
+    folders: ["shared", nickName],
     avatar: null,
   };
 
@@ -26,7 +26,7 @@ module.exports.create = (req, res, next) => {
       };
       Folder.create(folder)
         .then(() => {
-          archives.createDir(archives.cloudPath, user.name);
+          archives.createDir(archives.cloudPath, user.nickName);
           res.status(201).json(user);
         })
         .catch(next);
