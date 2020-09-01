@@ -32,11 +32,18 @@ module.exports.newFolder = (req, res, next) => {
 };
 
 module.exports.deleteFolder = (req, res, next) => {
-  const path = req.params.path.split("-").join("/");
+  const filtred = req.params.path.split("-");
+  const parent = filtred.slice(0, filtred.length - 1).join("/");
+  const name = filtred.reverse()[0];
 
-  let message = archives.deleteDir(`${archives.cloudPath}/${path}`);
-
-  res.json({ message });
+  Folder.findOneAndDelete({ name, parentFolder: parent })
+    .then((ok) => {
+      let message = archives.deleteDir(
+        `${archives.cloudPath}/${parent}/${name}`
+      );
+      res.json({ message });
+    })
+    .catch({ message: "errpr" });
 };
 
 module.exports.getMyFolders = (req, res, next) => {
