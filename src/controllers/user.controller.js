@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+const Folder = require("../models/folder.Model");
 const archives = require("../config/archivesFunctions");
 
 const bcrypt = require("bcrypt");
@@ -19,8 +20,16 @@ module.exports.create = (req, res, next) => {
 
   User.create(user)
     .then((user) => {
-      archives.createDir(archives.cloudPath, user.name);
-      res.status(201).json(user);
+      const folder = {
+        name: user.name,
+        owner: user.id,
+      };
+      Folder.create(folder)
+        .then(() => {
+          archives.createDir(archives.cloudPath, user.name);
+          res.status(201).json(user);
+        })
+        .catch(next);
     })
     .catch(next);
 };

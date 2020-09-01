@@ -3,11 +3,22 @@ const path = require("path");
 
 //routes
 const archives = require("../config/archivesFunctions");
-const { listenerCount } = require("../models/user.model");
+const Folder = require("../models/folder.Model");
 
 module.exports.newFolder = (req, res, next) => {
   const path = req.params.path.split("-").join("/");
   const { name } = req.body;
+
+  Folder.find({ name, owner: req.session.user.id }).then((ok) => {
+    if (!ok) {
+      const folder = {
+        name,
+        owner: req.session.user.id,
+        parentFolder: path,
+      };
+      Folder.create();
+    }
+  });
 
   if (fs.existsSync(`${archives.cloudPath}/${path}/${name}`)) {
     res.status(404).json({ message: "folder already exist" });
