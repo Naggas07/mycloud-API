@@ -133,3 +133,16 @@ module.exports.getFile = (req, res, next) => {
 };
 
 module.exports.getFiles = (req, res, next) => {};
+
+module.exports.pathSize = (req, res, next) => {
+  const internalPath = req.params.path
+    ? req.params.path.split("-").join("/")
+    : "";
+
+  File.find({ path: internalPath })
+    .then((items) => {
+      items.reduce();
+      res.status(200).json(items);
+    })
+    .catch((err) => next);
+};

@@ -70,10 +70,13 @@ const moveFile = (file, storagePath) => {
   });
 };
 
+const containCaracter = (string, char) => string.includes(char);
+
 module.exports = {
   cloudPath,
   createDir,
   deleteDir,
   moveFile,
   formatPath,
+  containCaracter,
 };
