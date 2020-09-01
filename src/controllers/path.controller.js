@@ -10,23 +10,25 @@ module.exports.newFolder = (req, res, next) => {
   const { name } = req.body;
 
   Folder.find({ name, owner: req.session.user.id }).then((ok) => {
-    if (!ok) {
+    console.log(ok[0]);
+    if (!ok[0]) {
+      console.log("entra");
       const folder = {
         name,
         owner: req.session.user.id,
         parentFolder: path,
       };
-      Folder.create();
+      console.log(folder);
+      Folder.create(folder)
+        .then((folder) => {
+          archives.createDir(`${archives.cloudPath}/${path}`, name);
+          res.status(200).json({ ok: "folder created" });
+        })
+        .catch(next);
+    } else {
+      res.status(200).json({ message: "folder already exist" });
     }
   });
-
-  if (fs.existsSync(`${archives.cloudPath}/${path}/${name}`)) {
-    res.status(404).json({ message: "folder already exist" });
-  }
-
-  archives.createDir(`${archives.cloudPath}/${path}`, name);
-
-  res.status(200).json({ message: "folder created" });
 };
 
 module.exports.deleteFolder = (req, res, next) => {
