@@ -9,12 +9,8 @@ module.exports.newFolder = (req, res, next) => {
   const id = req.params.id;
   const { name, path } = req.body;
 
-  console.log("entra1");
-  console.log(id, name);
-
   Folder.findOne({ name, parentFolder: id }).then((ok) => {
     if (!ok) {
-      console.log("entra");
       const folder = {
         name,
         owner: req.session.user.id,
@@ -24,7 +20,7 @@ module.exports.newFolder = (req, res, next) => {
       Folder.create(folder)
         .then((folder) => {
           archives.createDir(`${archives.cloudPath}/${path}`, name);
-          res.status(200).json({ ok: "folder created" });
+          res.status(200).json(folder);
         })
         .catch(next);
     } else {
@@ -34,18 +30,20 @@ module.exports.newFolder = (req, res, next) => {
 };
 
 module.exports.deleteFolder = (req, res, next) => {
-  const filtred = req.params.path.split("-");
-  const parent = filtred.slice(0, filtred.length - 1).join("/");
-  const name = filtred.reverse()[0];
+  const id = req.params.id;
+  let { path } = req.body;
 
-  Folder.findOneAndDelete({ name, parentFolder: parent })
+  let literalPath = path.replace("-", "/");
+
+  Folder.findByIdAndDelete(id)
     .then((ok) => {
       let message = archives.deleteDir(
-        `${archives.cloudPath}/${parent}/${name}`
+        `${archives.cloudPath}/${literalPath}/${ok.name}`
       );
+      message = message.split("/").reverse()[0];
       res.json({ message });
     })
-    .catch({ message: "errpr" });
+    .catch({ message: "error" });
 };
 
 module.exports.getMyFolders = (req, res, next) => {

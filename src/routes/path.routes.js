@@ -10,7 +10,7 @@ router.post(
   pathController.newFolder
 );
 router.post(
-  "/delete/:path",
+  "/delete/:id",
   authMiddleware.isAuthenticated,
   pathController.deleteFolder
 );
