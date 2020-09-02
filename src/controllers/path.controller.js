@@ -4,6 +4,7 @@ const path = require("path");
 //routes
 const archives = require("../config/archivesFunctions");
 const Folder = require("../models/folder.Model");
+const File = require("../models/file.Model");
 
 module.exports.newFolder = (req, res, next) => {
   const id = req.params.id;
@@ -35,15 +36,21 @@ module.exports.deleteFolder = (req, res, next) => {
 
   let literalPath = path.replace("-", "/");
 
-  Folder.findByIdAndDelete(id)
-    .then((ok) => {
-      let message = archives.deleteDir(
-        `${archives.cloudPath}/${literalPath}/${ok.name}`
-      );
-      message = message.split("/").reverse()[0];
-      res.json({ message });
-    })
-    .catch({ message: "error" });
+  File.find({ folder: id }).then((items) => {
+    if (!items[0]) {
+      Folder.findByIdAndDelete(id)
+        .then((ok) => {
+          let message = archives.deleteDir(
+            `${archives.cloudPath}/${literalPath}/${ok.name}`
+          );
+          message = message.split("/").reverse()[0];
+          res.json({ message });
+        })
+        .catch({ message: "error" });
+    } else {
+      res.status(500).json({ message: "files in this folder" });
+    }
+  });
 };
 
 module.exports.getMyFolders = (req, res, next) => {

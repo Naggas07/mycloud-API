@@ -7,8 +7,10 @@ const FileSchema = new Schema(
       type: String,
       required: true,
     },
-    path: {
-      type: String,
+    folder: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Folder",
+      required: true,
     },
     size: {
       type: Number,
@@ -22,6 +24,7 @@ const FileSchema = new Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
   },
   {
