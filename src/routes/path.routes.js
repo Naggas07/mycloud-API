@@ -27,6 +27,6 @@ router.get(
   pathController.getAdminFolder
 );
 
-router.get("/path/:path", pathController.getFolders);
+router.get("/path/:id", pathController.getFolders);
 
 module.exports = router;

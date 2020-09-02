@@ -72,12 +72,12 @@ module.exports.getAdminFolder = (req, res, next) => {
 };
 
 module.exports.getFolders = (req, res, next) => {
-  let path = `/${req.params.path.split("-")}`;
+  let id = req.params.id;
 
-  console.log(path);
-  Folder.find({ parentFolder: path })
+  console.log(id);
+  Folder.findById(id)
     .populate("File")
-    .populate("childFolders")
+    .populate("childs")
     .then((folders) => res.json(folders))
     .catch(next);
 };

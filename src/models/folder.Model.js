@@ -29,6 +29,7 @@ const FolderSchema = new Schema(
   {
     timestamps: true,
     toJSON: {
+      virtuals: true,
       transform: (doc, ret) => {
         ret.id = doc.id;
         delete ret._id;
@@ -39,10 +40,10 @@ const FolderSchema = new Schema(
   }
 );
 
-FolderSchema.virtual("childFolders", {
-  ref: "childFolders",
+FolderSchema.virtual("childs", {
+  ref: "Folder",
   localField: "_id",
-  foreignField: "childFiles",
+  foreignField: "parentFolder",
   justOne: false,
 });
 
