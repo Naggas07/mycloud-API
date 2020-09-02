@@ -53,6 +53,8 @@ module.exports.deleteFolder = (req, res, next) => {
   });
 };
 
+//delete when front already
+
 module.exports.getMyFolders = (req, res, next) => {
   let path = req.params.path.split("-");
   const mainFolder = path[0];

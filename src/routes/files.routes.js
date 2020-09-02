@@ -5,16 +5,15 @@ const authMiddleware = require("../middlewares/auth.middleware");
 const rolMiddleware = require("../middlewares/rol.middlewares");
 
 router.post(
-  "/upload/:path",
+  "/upload/:id",
   authMiddleware.isAuthenticated,
-  authMiddleware.isPropietary,
   filesController.upload
 );
 
 router.post(
   "/rename/:path",
   authMiddleware.isAuthenticated,
-  authMiddleware.isPropietary,
+  // authMiddleware.isPropietary,
   filesController.rename
 );
 
@@ -33,14 +32,14 @@ router.get(
 router.delete(
   "/delete/:path",
   authMiddleware.isAuthenticated,
-  authMiddleware.isPropietary,
+  // authMiddleware.isPropietary,
   filesController.deleteFile
 );
 
 router.delete(
   "/deleteMany/:path",
   authMiddleware.isAuthenticated,
-  authMiddleware.isPropietary,
+  // authMiddleware.isPropietary,
   filesController.deleteMultipleFiles
 );
 

@@ -16,14 +16,3 @@ module.exports.isNotAuthenticated = (req, _, next) => {
     next(createError(403));
   }
 };
-
-module.exports.isPropietary = (req, _, next) => {
-  if (
-    req.session.user.name === req.params.path.split("-")[0] ||
-    req.session.user.userType === "Admin"
-  ) {
-    next();
-  } else {
-    next(createError(403));
-  }
-};
