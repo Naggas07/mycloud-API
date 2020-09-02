@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 const FolderSchema = new Schema(
   {
     parentFolder: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Folder",
       required: true,
-      default: "/",
     },
     name: {
       type: String,
@@ -38,6 +38,20 @@ const FolderSchema = new Schema(
     },
   }
 );
+
+FolderSchema.virtual("childFolders", {
+  ref: "childFolders",
+  localField: "_id",
+  foreignField: "files",
+  justOne: false,
+});
+
+FolderSchema.virtual("Files", {
+  ref: "File",
+  localField: "_id",
+  foreignField: "files",
+  justOne: false,
+});
 
 const Folder = mongoose.model("Folder", FolderSchema);
 

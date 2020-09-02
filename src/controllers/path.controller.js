@@ -63,3 +63,14 @@ module.exports.getAdminFolder = (req, res, next) => {
 
   res.status(200).json(archives.formatPath(path));
 };
+
+module.exports.getFolders = (req, res, next) => {
+  let path = `/${req.params.path.split("-")}`;
+
+  console.log(path);
+  Folder.find({ parentFolder: path })
+    .populate("File")
+    .populate("childFolders")
+    .then((folders) => res.json(folders))
+    .catch(next);
+};

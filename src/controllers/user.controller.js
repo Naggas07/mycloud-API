@@ -20,16 +20,19 @@ module.exports.create = (req, res, next) => {
 
   User.create(user)
     .then((user) => {
-      const folder = {
-        name: user.name,
-        owner: user.id,
-      };
-      Folder.create(folder)
-        .then(() => {
-          archives.createDir(archives.cloudPath, user.nickName);
-          res.status(201).json(user);
-        })
-        .catch(next);
+      Folder.findOne({ name: "Home" }).then((home) => {
+        const folder = {
+          name: user.nickName,
+          owner: user.id,
+          parentFolder: home.id,
+        };
+        Folder.create(folder)
+          .then(() => {
+            archives.createDir(archives.cloudPath, user.nickName);
+            res.status(201).json(user);
+          })
+          .catch(next);
+      });
     })
     .catch(next);
 };
