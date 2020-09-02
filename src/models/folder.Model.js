@@ -42,7 +42,7 @@ const FolderSchema = new Schema(
 FolderSchema.virtual("childFolders", {
   ref: "childFolders",
   localField: "_id",
-  foreignField: "files",
+  foreignField: "childFiles",
   justOne: false,
 });
 

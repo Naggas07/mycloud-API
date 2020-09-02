@@ -6,17 +6,19 @@ const archives = require("../config/archivesFunctions");
 const Folder = require("../models/folder.Model");
 
 module.exports.newFolder = (req, res, next) => {
-  const path = req.params.path.split("-").join("/");
-  const { name } = req.body;
+  const id = req.params.id;
+  const { name, path } = req.body;
 
-  Folder.find({ name, owner: req.session.user.id }).then((ok) => {
-    console.log(ok[0]);
-    if (!ok[0]) {
+  console.log("entra1");
+  console.log(id, name);
+
+  Folder.findOne({ name, parentFolder: id }).then((ok) => {
+    if (!ok) {
       console.log("entra");
       const folder = {
         name,
         owner: req.session.user.id,
-        parentFolder: path,
+        parentFolder: id,
       };
       console.log(folder);
       Folder.create(folder)

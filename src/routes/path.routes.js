@@ -5,7 +5,7 @@ const authMiddleware = require("../middlewares/auth.middleware");
 const rolMiddleware = require("../middlewares/rol.middlewares");
 
 router.post(
-  "/new/:path",
+  "/new/:id",
   authMiddleware.isAuthenticated,
   pathController.newFolder
 );
