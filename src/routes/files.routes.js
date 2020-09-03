@@ -11,9 +11,8 @@ router.post(
 );
 
 router.post(
-  "/rename/:path",
+  "/rename/:id",
   authMiddleware.isAuthenticated,
-  // authMiddleware.isPropietary,
   filesController.rename
 );
 

@@ -77,23 +77,19 @@ module.exports.upload = async (req, res, next) => {
 };
 
 module.exports.rename = (req, res, next) => {
-  const path = req.params.path.split("-").join("/");
-  const { fileName, newName } = req.body;
-  let extension = fileName.split(".");
+  const { id } = req.params;
+  const { newName } = req.body;
 
-  File.findOneAndUpdate(
-    { path: path, name: fileName },
-    { name: `${newName}.${extension[extension.length - 1]}` }
-  )
+  File.findByIdAndUpdate(id, { name: newName })
     .then((ok) => {
       fs.renameSync(
-        `${archives.cloudPath}/${path}/${fileName}`,
-        `${archives.cloudPath}/${path}/${newName}.${fileName.split(".")[1]}`
+        `${archives.cloudPath}/${ok.path}/${ok.name}`,
+        `${archives.cloudPath}/${ok.path}/${newName}`
       );
 
       res.json({ ok: "ok " });
     })
-    .catch((err) => err);
+    .catch((err) => res.json({ message: "error" }));
 };
 
 module.exports.downloadFile = (req, res, next) => {
