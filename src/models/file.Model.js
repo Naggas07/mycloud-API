@@ -12,6 +12,9 @@ const FileSchema = new Schema(
       ref: "Folder",
       required: true,
     },
+    path: {
+      type: String,
+    },
     size: {
       type: Number,
     },

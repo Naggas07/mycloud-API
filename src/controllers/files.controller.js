@@ -10,6 +10,7 @@ module.exports.upload = async (req, res, next) => {
   const id = req.params.id;
   const { path } = req.body;
   const files = req.files.file;
+  let itemsNoUpdate = [];
 
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send("No files were uploaded.");
@@ -18,6 +19,7 @@ module.exports.upload = async (req, res, next) => {
   const createFile = (item, folder, id) => {
     let itemFile = {
       name: item.name,
+      path: path,
       folder: folder,
       size: item.size,
       encoding: item.encoding,
@@ -29,28 +31,48 @@ module.exports.upload = async (req, res, next) => {
   };
 
   await Folder.findById(id).then(async (folder) => {
-    console.log(folder);
-    console.log(files);
     try {
       if (Array.isArray(files)) {
-        console.log("entra en array");
         for (const file of files) {
-          let item = createFile(file, folder.id, req.session.user.id);
+          File.findOne({ path, name: file.name }).then(async (fileReview) => {
+            console.log(fileReview);
+            if (!fileReview) {
+              let item = createFile(file, folder.id, req.session.user.id);
 
-          console.log(archives.cloudPath);
-          File.create(item);
-          await archives.moveFile(file, `${archives.cloudPath}/${path}`);
+              File.create(item);
+              await archives.moveFile(file, `${archives.cloudPath}/${path}`);
+            } else {
+              console.log("Entra en fallo");
+              console.log(file.name);
+              itemsNoUpdate.push(file.name);
+            }
+          });
         }
       } else {
         console.log("entra en no array");
-        let item = createFile(files, folder.id, req.session.user.id);
-        File.create(item);
-        await archives.moveFile(files, `${archives.cloudPath}/${folder.name}/`);
+        File.findOne({ path, name: file.name }).then(async (fileReview) => {
+          console.log(fileReview);
+          if (!fileReview) {
+            let item = createFile(file, folder.id, req.session.user.id);
+
+            File.create(item);
+            await archives.moveFile(file, `${archives.cloudPath}/${path}`);
+          } else {
+            console.log("Entra en fallo");
+            console.log(file.name);
+            itemsNoUpdate.push(file.name);
+          }
+        });
       }
     } catch (err) {
       res.json({ message: "files not update" });
     }
-    res.json({ message: "files updated" });
+
+    console.log("items ", itemsNoUpdate);
+    let message = (await !itemsNoUpdate)
+      ? "files updated"
+      : `items not updates`;
+    res.json({ message });
   });
 };
 
