@@ -31,14 +31,12 @@ router.get(
 router.delete(
   "/delete/:id",
   authMiddleware.isAuthenticated,
-  // authMiddleware.isPropietary,
   filesController.deleteFile
 );
 
 router.delete(
-  "/deleteMany/:path",
+  "/deleteMany/:id",
   authMiddleware.isAuthenticated,
-  // authMiddleware.isPropietary,
   filesController.deleteMultipleFiles
 );
 

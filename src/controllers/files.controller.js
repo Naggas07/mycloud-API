@@ -35,31 +35,24 @@ module.exports.upload = async (req, res, next) => {
       if (Array.isArray(files)) {
         for (const file of files) {
           File.findOne({ path, name: file.name }).then(async (fileReview) => {
-            console.log(fileReview);
             if (!fileReview) {
               let item = createFile(file, folder.id, req.session.user.id);
 
               File.create(item);
               await archives.moveFile(file, `${archives.cloudPath}/${path}`);
             } else {
-              console.log("Entra en fallo");
-              console.log(file.name);
               itemsNoUpdate.push(file.name);
             }
           });
         }
       } else {
-        console.log("entra en no array");
         File.findOne({ path, name: files.name }).then(async (fileReview) => {
-          console.log(fileReview);
           if (!fileReview) {
             let item = createFile(files, folder.id, req.session.user.id);
 
             File.create(item);
             await archives.moveFile(files, `${archives.cloudPath}/${path}`);
           } else {
-            console.log("Entra en fallo");
-            console.log(files.name);
             itemsNoUpdate.push(files.name);
           }
         });
@@ -68,9 +61,7 @@ module.exports.upload = async (req, res, next) => {
       res.json({ message: "files not update" });
     }
 
-    console.log("items ", itemsNoUpdate);
     let message = "files updated";
-
     res.json({ message });
   });
 };
@@ -127,32 +118,25 @@ module.exports.deleteFile = (req, res, next) => {
 };
 
 module.exports.deleteMultipleFiles = (req, res, next) => {
-  const path = `${archives.cloudPath}/${req.params.path.split("-").join("/")}`;
+  const { id } = req.params;
   const { files } = req.body;
-  let failFiles = [];
 
-  if (!files) {
-    res.status(404).json({ message: "No files to delete" });
-  } else {
-    files.map((file) => {
-      let route = `${path}/${file}`;
+  Folder.findById(id)
+    .then((exist) => {
+      if (exist) {
+        files.map((fileId) => {
+          File.findByIdAndDelete(fileId).then((toDelete) => {
+            let file = `${archives.cloudPath}/${toDelete.path}/${toDelete.name}`;
 
-      if (fs.existsSync(route)) {
-        fs.unlinkSync(route);
-        File.findOneAndDelete({
-          path: `${req.params.path.split("-").join("/")}`,
-          name: file,
-        }).then((ok) => ok);
-      } else {
-        failFiles.push(file);
+            if (fs.existsSync(file)) {
+              fs.unlinkSync(file);
+            }
+          });
+        });
+        res.status(200).json({ message: "files deleted" });
       }
-    });
-    if (failFiles.length > 0) {
-      res.status(404).json({ filesFailed: failFiles });
-    } else {
-      res.status(200).json({ message: "Files deleted" });
-    }
-  }
+    })
+    .catch((err) => res.status(404).json({ message: "folder not found" }));
 };
 
 module.exports.getFile = (req, res, next) => {
