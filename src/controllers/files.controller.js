@@ -50,17 +50,17 @@ module.exports.upload = async (req, res, next) => {
         }
       } else {
         console.log("entra en no array");
-        File.findOne({ path, name: file.name }).then(async (fileReview) => {
+        File.findOne({ path, name: files.name }).then(async (fileReview) => {
           console.log(fileReview);
           if (!fileReview) {
-            let item = createFile(file, folder.id, req.session.user.id);
+            let item = createFile(files, folder.id, req.session.user.id);
 
             File.create(item);
-            await archives.moveFile(file, `${archives.cloudPath}/${path}`);
+            await archives.moveFile(files, `${archives.cloudPath}/${path}`);
           } else {
             console.log("Entra en fallo");
-            console.log(file.name);
-            itemsNoUpdate.push(file.name);
+            console.log(files.name);
+            itemsNoUpdate.push(files.name);
           }
         });
       }
@@ -69,9 +69,8 @@ module.exports.upload = async (req, res, next) => {
     }
 
     console.log("items ", itemsNoUpdate);
-    let message = (await !itemsNoUpdate)
-      ? "files updated"
-      : `items not updates`;
+    let message = "files updated";
+
     res.json({ message });
   });
 };
@@ -109,19 +108,22 @@ module.exports.downloadFile = (req, res, next) => {
 };
 
 module.exports.deleteFile = (req, res, next) => {
-  const allPath = req.params.path.split("-");
-  const file = `${archives.cloudPath}/${allPath.join("/")}`;
-  const path = allPath.slice(0, allPath.length - 1).join("/");
-  const fileName = allPath[allPath.length - 1];
+  const { id } = req.params;
 
-  if (fs.existsSync(file)) {
-    fs.unlinkSync(file);
-    File.findOneAndDelete({ path, name: fileName }).then((del) => {
-      res.status(200).json({ message: "File deleted" });
-    });
-  } else {
-    res.status(404).json({ message: "file don´t exist" });
-  }
+  File.findById(id)
+    .then((toDelete) => {
+      const file = `${archives.cloudPath}/${toDelete.path}/${toDelete.name}`;
+
+      if (fs.existsSync(file)) {
+        fs.unlinkSync(file);
+        File.findByIdAndDelete(id).then((del) => {
+          res.status(200).json({ message: "File deleted" });
+        });
+      } else {
+        res.status(404).json({ message: "file don´t exist" });
+      }
+    })
+    .catch((err) => next(err));
 };
 
 module.exports.deleteMultipleFiles = (req, res, next) => {
