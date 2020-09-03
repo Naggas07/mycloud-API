@@ -23,13 +23,13 @@ router.get(
 );
 
 router.get(
-  "/file/:path",
+  "/file/:id",
   authMiddleware.isAuthenticated,
   filesController.getFile
 );
 
 router.delete(
-  "/delete/:path",
+  "/delete/:id",
   authMiddleware.isAuthenticated,
   // authMiddleware.isPropietary,
   filesController.deleteFile
