@@ -17,7 +17,7 @@ router.post(
 );
 
 router.get(
-  "/download/:path",
+  "/download/:id",
   authMiddleware.isAuthenticated,
   filesController.downloadFile
 );

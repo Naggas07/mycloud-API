@@ -93,13 +93,19 @@ module.exports.rename = (req, res, next) => {
 };
 
 module.exports.downloadFile = (req, res, next) => {
-  const file = `${archives.cloudPath}/${req.params.path.split("-").join("/")}`;
+  const { id } = req.params;
 
-  if (fs.existsSync(file)) {
-    res.status(200).download(file);
-  } else {
-    res.status(404).json({ message: "file don´t exist" });
-  }
+  File.findById(id)
+    .then((ok) => {
+      const file = `${archives.cloudPath}/${ok.path}/${ok.name}`;
+
+      if (fs.existsSync(file)) {
+        res.status(200).download(file);
+      } else {
+        res.status(404).json({ message: "file don´t exist" });
+      }
+    })
+    .catch((err) => next(err));
 };
 
 module.exports.deleteFile = (req, res, next) => {
