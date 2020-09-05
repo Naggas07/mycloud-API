@@ -40,4 +40,10 @@ router.delete(
   filesController.deleteMultipleFiles
 );
 
+router.get(
+  "/size/:path",
+  authMiddleware.isAuthenticated,
+  filesController.getSizeFolder
+);
+
 module.exports = router;

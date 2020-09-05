@@ -5,6 +5,7 @@ const Folder = require("../models/folder.Model");
 
 //routes
 const archives = require("../config/archivesFunctions");
+const { ok } = require("assert");
 
 module.exports.upload = async (req, res, next) => {
   const { id } = req.params;
@@ -155,15 +156,19 @@ module.exports.getFile = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-module.exports.pathSize = (req, res, next) => {
-  const internalPath = req.params.path
-    ? req.params.path.split("-").join("/")
-    : "";
+module.exports.getSizeFolder = (req, res, next) => {
+  const path =
+    req.params.path === "-" ? null : req.params.path.replace("-", "/");
 
-  File.find({ path: internalPath })
-    .then((items) => {
-      items.reduce();
-      res.status(200).json(items);
+  File.find({ path: path })
+    .then((okPath) => {
+      if (okPath[0]) {
+        let size = okPath.reduce((acc, item) => acc + item.size, 0);
+
+        res.status(200).json({ size: size });
+      } else {
+        res.status(200).json({ size: 0 });
+      }
     })
-    .catch((err) => next);
+    .catch(next);
 };
