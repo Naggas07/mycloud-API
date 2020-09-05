@@ -83,11 +83,10 @@ module.exports.getFolders = (req, res, next) => {
 
 module.exports.updateFolder = (req, res, next) => {
   const { id } = req.params;
-  const { name, owner, editors, viewers, path } = req.body;
+  const { name, editors, viewers, path } = req.body;
 
   const toUpdate = {
     name,
-    owner,
     editors,
     viewers,
     path,
@@ -101,12 +100,12 @@ module.exports.updateFolder = (req, res, next) => {
       );
 
       if (updated.name !== name) {
-        Folder.findAndUpdate(
+        Folder.updateMany(
           { path: `${path}/${updated.name}` },
           { path: `${path}/${name}` }
         )
           .then((foldersUpdated) => {
-            File.findAndUpdate(
+            File.updateMany(
               { path: `${path}/${updated.name}` },
               { path: `${path}/${name}` }
             ).then((filesUpadtes) => {

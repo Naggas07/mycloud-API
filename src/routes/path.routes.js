@@ -27,8 +27,16 @@ router.get(
   pathController.getAdminFolder
 );
 
-router.get("/path/:id", pathController.getFolders);
+router.get(
+  "/path/:id",
+  authMiddleware.isAuthenticated,
+  pathController.getFolders
+);
 
-router.put("/update/:id", pathController.updateFolder);
+router.put(
+  "/update/:id",
+  authMiddleware.isAuthenticated,
+  pathController.updateFolder
+);
 
 module.exports = router;
