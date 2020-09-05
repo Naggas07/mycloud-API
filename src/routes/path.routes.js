@@ -39,4 +39,10 @@ router.put(
   pathController.updateFolder
 );
 
+router.get(
+  "/users/:id",
+  authMiddleware.isAuthenticated,
+  pathController.getFolderUsers
+);
+
 module.exports = router;

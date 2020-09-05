@@ -5,6 +5,7 @@ const path = require("path");
 const archives = require("../config/archivesFunctions");
 const Folder = require("../models/folder.Model");
 const File = require("../models/file.Model");
+const User = require("../models/user.model");
 
 module.exports.newFolder = (req, res, next) => {
   const id = req.params.id;
@@ -78,6 +79,31 @@ module.exports.getFolders = (req, res, next) => {
     .populate("files")
     .populate("childs")
     .then((folders) => res.json(folders))
+    .catch(next);
+};
+
+module.exports.getFolderUsers = (req, res, next) => {
+  const { id } = req.params;
+
+  Folder.findById(id)
+    .then((okFolder) => {
+      User.findById(okFolder.owner).then((owner) => {
+        User.find({ _id: okFolder.editors }).then((editors) => {
+          User.find({ _id: okFolder.viewers }).then((viewers) => {
+            const users = {
+              folder: {
+                name: okFolder.name,
+                path: okFolder.path,
+              },
+              viewers,
+              editors,
+              owner,
+            };
+            res.status(200).json(users);
+          });
+        });
+      });
+    })
     .catch(next);
 };
 
