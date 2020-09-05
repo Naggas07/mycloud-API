@@ -150,8 +150,6 @@ module.exports.updateFolder = (req, res, next) => {
 module.exports.foldersSize = (req, res, next) => {
   const path = req.params.path.replace("-", "/");
 
-  console.log(path);
-
   Folder.find({ path: { $regex: path, $options: "i" } })
     .populate("files")
     .populate("childs")
