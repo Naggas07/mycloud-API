@@ -17,8 +17,9 @@ module.exports.newFolder = (req, res, next) => {
         name,
         owner: req.session.user.id,
         parentFolder: id,
+        path,
       };
-      console.log(folder);
+
       Folder.create(folder)
         .then((folder) => {
           archives.createDir(`${archives.cloudPath}/${path}`, name);
@@ -142,6 +143,20 @@ module.exports.updateFolder = (req, res, next) => {
       } else {
         res.status(200).json({ message: "folder Update" });
       }
+    })
+    .catch(next);
+};
+
+module.exports.foldersSize = (req, res, next) => {
+  const path = req.params.path.replace("-", "/");
+
+  console.log(path);
+
+  Folder.find({ path: { $regex: path, $options: "i" } })
+    .populate("files")
+    .populate("childs")
+    .then((folders) => {
+      res.json(folders);
     })
     .catch(next);
 };

@@ -45,4 +45,10 @@ router.get(
   pathController.getFolderUsers
 );
 
+router.get(
+  "/sizes/:path",
+  authMiddleware.isAuthenticated,
+  pathController.foldersSize
+);
+
 module.exports = router;
