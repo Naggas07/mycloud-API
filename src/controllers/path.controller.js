@@ -72,12 +72,51 @@ module.exports.getAdminFolder = (req, res, next) => {
 };
 
 module.exports.getFolders = (req, res, next) => {
-  let id = req.params.id;
+  let id = req.params.id === "-" ? process.env.MAIN_FOLDER : req.params.id;
 
-  console.log(id);
   Folder.findById(id)
     .populate("files")
     .populate("childs")
     .then((folders) => res.json(folders))
+    .catch(next);
+};
+
+module.exports.updateFolder = (req, res, next) => {
+  const { id } = req.params;
+  const { name, owner, editors, viewers, path } = req.body;
+
+  const toUpdate = {
+    name,
+    owner,
+    editors,
+    viewers,
+    path,
+  };
+
+  Folder.findByIdAndUpdate(id, toUpdate)
+    .then((updated) => {
+      fs.renameSync(
+        `${archives.globalPath(path)}/${updated.name}`,
+        `${archives.globalPath(path)}/${name}`
+      );
+
+      if (updated.name !== name) {
+        Folder.findAndUpdate(
+          { path: `${path}/${updated.name}` },
+          { path: `${path}/${name}` }
+        )
+          .then((foldersUpdated) => {
+            File.findAndUpdate(
+              { path: `${path}/${updated.name}` },
+              { path: `${path}/${name}` }
+            ).then((filesUpadtes) => {
+              res.status(200).json({ message: "folder Update" });
+            });
+          })
+          .catch((err) => next(err));
+      } else {
+        res.status(200).json({ message: "folder Update" });
+      }
+    })
     .catch(next);
 };

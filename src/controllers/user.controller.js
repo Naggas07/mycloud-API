@@ -25,6 +25,7 @@ module.exports.create = (req, res, next) => {
           name: user.nickName,
           owner: user.id,
           parentFolder: home.id,
+          path: "",
         };
         Folder.create(folder)
           .then(() => {

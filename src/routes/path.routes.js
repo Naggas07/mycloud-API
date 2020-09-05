@@ -29,4 +29,6 @@ router.get(
 
 router.get("/path/:id", pathController.getFolders);
 
+router.put("/update/:id", pathController.updateFolder);
+
 module.exports = router;

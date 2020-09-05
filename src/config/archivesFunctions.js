@@ -1,9 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const cloudPath = path.join(
-  "/Users/naggas/Desktop/Proyectos/myCloud/src/uploads/users"
-);
+const cloudPath = "/Users/naggas/Desktop/Proyectos/myCloud/src/uploads/users";
 
 let dirs = fs
   .readdirSync(cloudPath)
@@ -72,6 +70,8 @@ const moveFile = (file, storagePath) => {
 
 const containCaracter = (string, char) => string.includes(char);
 
+const globalPath = (path) => `${cloudPath}/${path}`;
+
 module.exports = {
   cloudPath,
   createDir,
@@ -79,4 +79,5 @@ module.exports = {
   moveFile,
   formatPath,
   containCaracter,
+  globalPath,
 };
