@@ -47,10 +47,10 @@ FolderSchema.virtual("childs", {
   justOne: false,
 });
 
-FolderSchema.virtual("Files", {
+FolderSchema.virtual("files", {
   ref: "File",
   localField: "_id",
-  foreignField: "files",
+  foreignField: "folder",
   justOne: false,
 });
 
