@@ -7,7 +7,7 @@ const Folder = require("../models/folder.Model");
 const archives = require("../config/archivesFunctions");
 
 module.exports.upload = async (req, res, next) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const { path } = req.body;
   const files = req.files.file;
   let itemsNoUpdate = [];
@@ -103,7 +103,7 @@ module.exports.deleteFile = (req, res, next) => {
 
   File.findById(id)
     .then((toDelete) => {
-      const file = `${archives.cloudPath}/${toDelete.path}/${toDelete.name}`;
+      const file = `${archives.globalPath(path)}/${toDelete.name}`;
 
       if (fs.existsSync(file)) {
         fs.unlinkSync(file);
@@ -126,7 +126,7 @@ module.exports.deleteMultipleFiles = (req, res, next) => {
       if (exist) {
         files.map((fileId) => {
           File.findByIdAndDelete(fileId).then((toDelete) => {
-            let file = `${archives.cloudPath}/${toDelete.path}/${toDelete.name}`;
+            let file = `${archives.globalPath(path)}/${toDelete.name}`;
 
             if (fs.existsSync(file)) {
               fs.unlinkSync(file);
@@ -144,7 +144,7 @@ module.exports.getFile = (req, res, next) => {
 
   File.findById(id)
     .then((ok) => {
-      const file = `${archives.cloudPath}/${ok.path}/${ok.name}`;
+      const file = `${archives.globalPath(path)}/${ok.name}`;
 
       if (fs.existsSync(file)) {
         res.sendFile(path.resolve(file));
@@ -154,8 +154,6 @@ module.exports.getFile = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
-
-module.exports.getFiles = (req, res, next) => {};
 
 module.exports.pathSize = (req, res, next) => {
   const internalPath = req.params.path
