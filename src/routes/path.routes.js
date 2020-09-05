@@ -48,6 +48,7 @@ router.get(
 router.get(
   "/sizes/:path",
   authMiddleware.isAuthenticated,
+  authMiddleware.isEditor,
   pathController.foldersSize
 );
 
